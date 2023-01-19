@@ -3,7 +3,7 @@ import Foundation
 public struct StarknetSequencerInvokeTransaction: StarknetSequencerTransaction, Equatable {
     public let type: StarknetTransactionType = .invoke
     
-    public let version: Felt = Felt.one
+    public let version: Felt = Felt(fromHex: "0x100000000000000000000000000000001")!
     
     public let senderAddress: Felt
     
@@ -110,7 +110,7 @@ public struct StarknetInvokeTransaction: StarknetTransaction, Equatable {
 public struct StarknetSequencerDeployAccountTransaction: StarknetSequencerTransaction, Equatable {
     public let type: StarknetTransactionType = .deployAccount
     
-    public let version: Felt = .one
+    public let version: Felt = Felt(fromHex: "0x100000000000000000000000000000001")!
     
     public let signature: StarknetSignature
     
