@@ -457,7 +457,10 @@ public extension StarknetTypedData {
             } else if let bool = try? container.decode(Bool.self) {
                 self = .bool(bool)
             } else if let string = try? container.decode(String.self) {
-                if let uint = UInt64(string) {
+                // For shortstring fields, prioritize string encoding over numeric parsing
+                if let felt = Felt.fromShortString(string) {
+                    self = .felt(felt)
+                } else if let uint = UInt64(string) {
                     self = .decimal(uint)
                 } else if let int = Int64(string) {
                     self = .signedDecimal(int)
@@ -486,7 +489,14 @@ public extension StarknetTypedData {
             case let .signedDecimal(signedDecimal):
                 try signedDecimal.encode(to: encoder)
             case let .felt(felt):
-                try felt.encode(to: encoder)
+                // Try to convert back to shortstring if possible
+                let shortString = felt.toShortString()
+                // If the shortstring is all ASCII and looks like a valid shortstring, encode as string
+                if shortString.allSatisfy(\.isASCII) && shortString.count <= 31 {
+                    try shortString.encode(to: encoder)
+                } else {
+                    try felt.encode(to: encoder)
+                }
             case let .signedFelt(felt):
                 try felt.encode(to: encoder)
             case let .object(object):
