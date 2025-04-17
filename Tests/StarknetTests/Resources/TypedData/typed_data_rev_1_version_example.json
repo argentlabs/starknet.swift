@@ -1,0 +1,46 @@
+{
+    "types": {
+        "StarknetDomain": [
+            { "name": "name", "type": "shortstring" },
+            { "name": "version", "type": "shortstring" },
+            { "name": "chainId", "type": "shortstring" },
+            { "name": "revision", "type": "shortstring" }
+        ],
+        "OutsideExecution": [
+            { "name": "Caller", "type": "ContractAddress" },
+            { "name": "Nonce", "type": "felt" },
+            { "name": "Execute After", "type": "u128" },
+            { "name": "Execute Before", "type": "u128" },
+            { "name": "Calls", "type": "Call*" }
+        ],
+        "Call": [
+            { "name": "To", "type": "ContractAddress" },
+            { "name": "Selector", "type": "selector" },
+            { "name": "Calldata", "type": "felt*" }
+        ]
+    },
+    "primaryType": "OutsideExecution",
+    "domain": {
+        "name": "Account.execute_from_outside",
+        "version": "2",
+        "chainId": "0x534e5f5345504f4c4941",
+        "revision": "1"
+    },
+    "message": {
+        "Caller": "0x75a180e18e56da1b1cae181c92a288f586f5fe22c18df21cf97886f1e4b316c",
+        "Nonce": "0x1a2f0b0377cf803fbe3ce5ae5ce3dd4f1a167088bbfb677e409d66bd664b018",
+        "Execute After": "0x1",
+        "Execute Before": "0x196435b26bf",
+        "Calls": [
+            {
+                "To": "0xabbd6f1e590eb83addd87ba5ac27960d859b1f17d11a3c1cd6a0006704b141",
+                "Selector": "0x83afd3f4caedc6eebf44246fe54e38c95e3179a5ec9ea81740eca5b482d12e",
+                "Calldata": [
+                    "0x783cfa7b667a36592c07156d0db751acaea3ee4bab0fd7cda6ea701bc7aae3c",
+                    "0x5f5e100",
+                    "0x0"
+                ]
+            }
+        ]
+    }
+} 

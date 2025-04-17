@@ -408,10 +408,18 @@ public extension StarknetTypedData {
 
         public init(from decoder: Decoder) throws {
             let container = try decoder.container(keyedBy: CodingKeys.self)
-            self.name = try container.decode(Element.self, forKey: .name)
-            self.version = try container.decode(Element.self, forKey: .version)
-            self.chainId = try container.decode(Element.self, forKey: .chainId)
             self.revision = try container.decodeIfPresent(Revision.self, forKey: .revision) ?? .v0
+
+            switch revision {
+            case .v0:
+                self.name = try container.decode(Element.self, forKey: .name)
+                self.version = try container.decode(Element.self, forKey: .version)
+                self.chainId = try container.decode(Element.self, forKey: .chainId)
+            case .v1:
+                self.name = try container.decode(Element.self, forKey: .name)
+                self.version = .string(try container.decode(String.self, forKey: .version))
+                self.chainId = try container.decode(Element.self, forKey: .chainId)
+            }
         }
     }
 

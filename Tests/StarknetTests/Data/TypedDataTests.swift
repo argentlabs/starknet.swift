@@ -474,4 +474,37 @@ final class TypedDataTests: XCTestCase {
             throw e
         }
     }
+
+    func testShortStringPreservation() throws {
+        let tdJsonStr = try loadTypedDataJsonStringFromFile(name: "typed_data_rev_1_version_example")
+        guard let tdEncodedContents = tdJsonStr.data(using: .utf8) else {
+            throw DecodingError.dataCorrupted(DecodingError.Context(codingPath: [], debugDescription: "Failed to load typed data"))
+        }
+
+        // Decode the original JSON
+        let td = try JSONDecoder().decode(StarknetTypedData.self, from: tdEncodedContents)
+        
+        // Re-encode to JSON
+        let encodedData = try JSONEncoder().encode(td)
+        
+        // Decode both JSONs to dictionaries for comparison
+        let originalJson = try JSONSerialization.jsonObject(with: tdEncodedContents, options: []) as? [String: Any]
+        let encodedJson = try JSONSerialization.jsonObject(with: encodedData, options: []) as? [String: Any]
+        
+        // Get the domain sections
+        let originalDomain = (originalJson?["domain"] as? [String: Any])
+        let encodedDomain = (encodedJson?["domain"] as? [String: Any])
+        
+        // Verify version is preserved as a string
+        XCTAssertEqual(originalDomain?["version"] as? String, "2")
+        XCTAssertEqual(encodedDomain?["version"] as? String, "2")
+
+        XCTAssertEqual(originalDomain?["revision"] as? String, "1")
+        XCTAssertEqual(encodedDomain?["revision"] as? String, "1")
+
+        // Verify other fields
+        XCTAssertEqual(originalDomain?["name"] as? String, encodedDomain?["name"] as? String)
+        XCTAssertEqual(originalDomain?["chainId"] as? String, encodedDomain?["chainId"] as? String)
+        XCTAssertEqual(originalDomain?["revision"] as? String, encodedDomain?["revision"] as? String)
+    }
 }
